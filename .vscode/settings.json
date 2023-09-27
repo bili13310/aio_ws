@@ -1,0 +1,13 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/bili/aio_ws/devel/lib/python3/dist-packages",
+        "/home/bili/kw_gui_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/bili/aio_ws/devel/lib/python3/dist-packages",
+        "/home/bili/kw_gui_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "ros.distro": "noetic"
+}
