@@ -29,7 +29,7 @@ class Limo_wall_following:
         self.obstacle_data_idx = []
 
         self.DIRECTION = direction
-        self.default_speed = 0.15
+        self.default_speed = 0.30
         self.default_angle = 0.2
         self.scan_dist = 0.5
         self.offset = 0.2
@@ -39,15 +39,19 @@ class Limo_wall_following:
     def laser_callback(self, msg):
         self.msg = msg
         self.is_scan = True
-        print("callback")
+        # print("callback")
 
     def LiDAR_scan(self):
-        print("LiDAR_scan")
+        # print("LiDAR_scan")
         if self.lidar_flag == False:
+            # self.msg.angle_min = -2.094399929046631
+            # len(self.msg.ranges) = 720
+            # check the components of ranges from the photo i captured
             self.degrees = [
                 (self.msg.angle_min + (i * self.msg.angle_increment)) * 180 / pi
                 for i, data in enumerate(self.msg.ranges)
             ]
+            # check the components of degrees from the photo i captured
             self.lidar_flag = True
 
         # 원하는 각도 내에서 원하는 거리값 이내 값 뽑기
@@ -64,14 +68,12 @@ class Limo_wall_following:
     def judge_distance(self):
         if len(self.obstacle_data_range) == 0:
             self.condition = "forward"
-            self.speed = self.default_speed
+            # self.speed = self.default_speed
             if len(self.distance) > 0:
                 if min(self.distance) < self.scan_dist - self.offset:
                     self.condition = "close"
 
-                elif (
-                    self.scan_dist - self.offset <= max(self.distance) <= self.scan_dist+self.offset
-                ):
+                elif (self.scan_dist - self.offset <= max(self.distance) <= self.scan_dist+self.offset):
                     self.condition = "maintaining"
             else:
                 self.condition = "far"
@@ -90,10 +92,10 @@ class Limo_wall_following:
             try:
                 theta = acos(angle2 / angle1)
                 thetad = theta * 180 / pi
-                print(thetad)
+                # print(thetad)
                 DEFAULT_THETA = 0.28
                 if 0 < thetad < 20:
-                    print("세타가 작습니다")
+                    # print("세타가 작습니다")
                     if self.DIRECTION == LEFT:
                         self.angle = theta - DEFAULT_THETA
                     elif self.DIRECTION == RIGHT:
@@ -101,7 +103,7 @@ class Limo_wall_following:
                     self.speed = self.default_speed
 
                 elif thetad > 20:
-                    print("세타가 큽니다.")
+                    # print("세타가 큽니다.")
                     if self.DIRECTION == LEFT:
                         self.angle = -(theta - DEFAULT_THETA)
                     elif self.DIRECTION == RIGHT:
@@ -113,7 +115,7 @@ class Limo_wall_following:
             pass
 
     def obstacle_motion(self):
-        print("obstacle_motion")
+        # print("obstacle_motion")
         angle_incre = len(self.obstacle_data_idx) / 10 * pi / 180
         obstacle_end_point = self.obstacle_data_idx[-1]
         blank_space = len(self.obstacle_data_idx) - obstacle_end_point
@@ -138,13 +140,13 @@ class Limo_wall_following:
             self.speed = self.default_speed
             self.angle = 0
         elif self.condition == "close":
-            print("벽과의 거리가 60cm보다 작습니다.")
+            # print("벽과의 거리가 60cm보다 작습니다.")
             if self.DIRECTION == LEFT:
                 self.angle = -self.default_angle / (min(self.distance) * 10)
             elif self.DIRECTION == RIGHT:
                 self.angle = self.default_angle / (min(self.distance) * 10)
         elif self.condition == "far":
-            print("벽과의 거리가 60cm보다 큽니다")
+            # print("벽과의 거리가 60cm보다 큽니다")
             if self.DIRECTION == LEFT:
                 self.angle = (self.default_angle) * 2
             elif self.DIRECTION == RIGHT:
