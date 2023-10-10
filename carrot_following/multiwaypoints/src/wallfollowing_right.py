@@ -90,8 +90,6 @@ class Limo_wall_following:
         elif self.DIRECTION == RIGHT:
             angle1 = self.angle_distance(-70)
             angle2 = self.angle_distance(-80)
-            print(angle1)
-            print(angle2)
         if angle2 is not None and angle1 is not None:
             try:
                 theta = acos(angle2 / angle1)

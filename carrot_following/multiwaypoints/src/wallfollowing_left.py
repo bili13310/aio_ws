@@ -57,16 +57,16 @@ class Limo_wall_following:
 
         # 전방 디택팅 각도
         for i, data in enumerate(self.msg.ranges):
-            if -5 < self.degrees[i] < 5 and 0 < self.msg.ranges[i] < self.scan_dist:
+            if -5 < self.degrees[i] < -1 and 0 < self.msg.ranges[i] < self.scan_dist:
                 self.obstacle_data_idx.append(i)
                 self.obstacle_data_range.append(data)
 
     def judge_distance(self):
-        if len(self.obstacle_data_range) == 0:
+        if 0 <= len(self.obstacle_data_range) <= 4:
             self.condition = "forward"
             self.speed = self.default_speed
             if len(self.distance) > 0:
-                if min(self.distance) < self.scan_dist - self.offset:
+                if min(self.distance) < self.scan_dist - 0.6:
                     self.condition = "close"
 
                 elif (
@@ -77,6 +77,7 @@ class Limo_wall_following:
                 self.condition = "far"
 
         else:
+            print(len(self.obstacle_data_range))
             self.condition = "obstacle"
 
     def maintain_direction(self):

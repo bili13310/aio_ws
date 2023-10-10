@@ -78,6 +78,7 @@ class Limo_wall_following:
                 self.condition = "far"
 
         else:
+            #when things are detected between -5~5
             print(len(self.obstacle_data_range))
             self.condition = "obstacle"
 
@@ -117,22 +118,18 @@ class Limo_wall_following:
                     self.speed = self.default_speed
             except ValueError:
                 pass
+        elif angle2 is None and angle1 is None:
+            print("angle None, 직진 유지")
+            print(self.DIRECTION)
+            if self.DIRECTION == LEFT:
+                self.angle = 0
+            elif self.DIRECTION == RIGHT:
+                self.angle = -0.1
+                self.speed = self.default_speed
+            self.speed = self.default_speed
         else:
             pass
-
-    def obstacle_motion(self):
-        print("obstacle_motion")
-        angle_incre = len(self.obstacle_data_idx) / 10 * pi / 180
-        obstacle_end_point = self.obstacle_data_idx[-1]
-        blank_space = len(self.obstacle_data_idx) - obstacle_end_point
-        turn_angle = angle_incre * blank_space / 10
-        # print(len(self.obstacle_data_idx))
-        if self.DIRECTION == LEFT:
-            self.angle = turn_angle
-        elif self.DIRECTION == RIGHT:
-            self.angle = -turn_angle
-        self.speed = 0.06
-
+    
     def angle_distance(self, degree):
         for i, data in enumerate(self.msg.ranges):
             if (
@@ -166,6 +163,19 @@ class Limo_wall_following:
         self.obstacle_data_idx = []
         self.obstacle_data_range = []
         self.distance = []
+
+    def obstacle_motion(self):
+        print("obstacle_motion")
+        angle_incre = len(self.obstacle_data_idx) / 10 * pi / 180
+        obstacle_end_point = self.obstacle_data_idx[-1]
+        blank_space = len(self.obstacle_data_idx) - obstacle_end_point
+        turn_angle = angle_incre * blank_space / 10
+        # print(len(self.obstacle_data_idx))
+        if self.DIRECTION == LEFT:
+            self.angle = turn_angle
+        elif self.DIRECTION == RIGHT:
+            self.angle = -turn_angle
+        self.speed = 0.06
 
     def main(self):
         if self.is_scan:
