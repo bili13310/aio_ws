@@ -16,7 +16,6 @@ class Limo_wall_following:
         # rospy.Subscriber("limo/scan", LaserScan, self.laser_callback)
         rospy.Subscriber("/scan_filtered", LaserScan, self.laser_callback)
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=3)
-        self.cmd_vel_msg = Twist()
 
         self.condition = None
         self.speed = 0
@@ -30,7 +29,7 @@ class Limo_wall_following:
         self.obstacle_data_idx = []
 
         self.DIRECTION = direction
-        self.default_speed = 0.20
+        self.default_speed = 0.4
         self.default_angle = 0.2
         self.scan_dist = 0.8   # 0.8
         self.offset = 0.5       # 0.5
